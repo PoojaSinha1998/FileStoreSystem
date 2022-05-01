@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_folder/screens/homepage.dart';
 import 'package:flutter_folder/utils/global.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,8 +12,8 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-
   SharedPreferences preferences;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,14 +21,23 @@ class _SplashPageState extends State<SplashPage> {
       body: Center(
         child: Container(
           color: Colors.white,
-
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset("assets/image/drive.png",width: 50,height: 50, fit: BoxFit.contain,),
-              SizedBox(height: 20,),
-              Text("File Store System",style: TextStyle(fontSize: 20,color: Colors.black),)
+              Image.asset(
+                "assets/image/drive.png",
+                width: 50,
+                height: 50,
+                fit: BoxFit.contain,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                "File Store System",
+                style: TextStyle(fontSize: 20, color: Colors.black),
+              )
             ],
           ),
         ),
@@ -40,16 +48,12 @@ class _SplashPageState extends State<SplashPage> {
   Future<void> firstTimeLoginChecking() async {
     preferences = await SharedPreferences.getInstance();
     var name = preferences.getString(Global.NAME);
-    print("HERE NAME ${name}");
-    if(name!=null)
-      {
-        Navigator.of(context).pushReplacementNamed('homepage');
-      }
-    else{
+    print("HERE NAME $name");
+    if (name != null) {
+      Navigator.of(context).pushReplacementNamed('homepage');
+    } else {
       Navigator.of(context).pushReplacementNamed('login_page');
     }
-
-
   }
 
   startTime() async {
@@ -59,12 +63,11 @@ class _SplashPageState extends State<SplashPage> {
 
   void navigationPage() {
     firstTimeLoginChecking();
-
   }
+
   @override
   void initState() {
     super.initState();
     startTime();
   }
-
 }

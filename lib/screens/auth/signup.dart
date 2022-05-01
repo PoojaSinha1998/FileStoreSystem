@@ -20,8 +20,9 @@ class _SignUPageState extends State<SignUPage> {
           child: Center(
             child: ListView(
               children: <Widget>[
-
-                SizedBox(height: 50,),
+                SizedBox(
+                  height: 50,
+                ),
                 Container(
                     alignment: Alignment.center,
                     padding: const EdgeInsets.all(10),
@@ -30,7 +31,6 @@ class _SignUPageState extends State<SignUPage> {
                       style: TextStyle(fontSize: 20),
                     )),
                 Column(
-
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -55,8 +55,9 @@ class _SignUPageState extends State<SignUPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20,),
-
+                    SizedBox(
+                      height: 20,
+                    ),
                     Container(
                         height: 50,
                         width: MediaQuery.of(context).size.width,
@@ -67,8 +68,7 @@ class _SignUPageState extends State<SignUPage> {
                             print(nameController.text);
                             print(passwordController.text);
                           },
-                        )
-                    ),
+                        )),
                     Row(
                       children: <Widget>[
                         const Text('Does not have account?'),
@@ -86,7 +86,6 @@ class _SignUPageState extends State<SignUPage> {
                     ),
                   ],
                 ),
-
               ],
             ),
           )),

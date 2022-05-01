@@ -11,19 +11,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-
-      routes: <String,WidgetBuilder>{
-        'signup_page' : (BuildContext context) => SignUPage(),
-        'login_page' : (BuildContext context) => LoginPage(),
-        'homepage' :(BuildContext context) => HomePage(),
-
+      routes: <String, WidgetBuilder>{
+        'signup_page': (BuildContext context) => SignUPage(),
+        'login_page': (BuildContext context) => LoginPage(),
+        'homepage': (BuildContext context) => HomePage(),
       },
       home: SplashPage(),
     );
   }
 }
-

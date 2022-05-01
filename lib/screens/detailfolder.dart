@@ -7,28 +7,29 @@ import 'package:flutter_folder/utils/global.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-class InnerFolder extends StatefulWidget{
 
-  InnerFolder({this.filespath});
-  final String filespath;
+class InnerFolder extends StatefulWidget {
+  InnerFolder({this.filesPath});
+
+  final String filesPath;
 
   @override
   State<StatefulWidget> createState() {
     return InnerFolderState();
   }
-
 }
-class InnerFolderState extends State<InnerFolder>{
 
-  String get fileStr =>widget.filespath;
+class InnerFolderState extends State<InnerFolder> {
+  String get fileStr => widget.filesPath;
   bool permissionGranted = false;
+
   Future<String> createFolderInAppDocDir(String folderName) async {
     //Get this App Document Directory
 
     final Directory _appDocDir = await getApplicationDocumentsDirectory();
     //App Document Directory + folder name
     final Directory _appDocDirFolder =
-    Directory('${_appDocDir.path}/$folderName/');
+        Directory('${_appDocDir.path}/$folderName/');
 
     if (await _appDocDirFolder.exists()) {
       //if folder already exists return path
@@ -36,7 +37,7 @@ class InnerFolderState extends State<InnerFolder>{
     } else {
       //if folder not exists create folder and then return its path
       final Directory _appDocDirNewFolder =
-      await _appDocDirFolder.create(recursive: true);
+          await _appDocDirFolder.create(recursive: true);
       return _appDocDirNewFolder.path;
     }
   }
@@ -52,93 +53,16 @@ class InnerFolderState extends State<InnerFolder>{
   final folderController = TextEditingController();
   String nameOfFolder;
 
-  Future<void> _showMyDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Column(
-            children: [
-              Text(
-                'ADD FOLDER',
-                textAlign: TextAlign.left,
-              ),
-              Text(
-                'Type a folder name to add',
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-              )
-            ],
-          ),
-          content: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return TextField(
-                controller: folderController,
-                autofocus: true,
-                decoration: InputDecoration(hintText: 'Enter folder name'),
-                onChanged: (val) {
-                  setState(() {
-                    nameOfFolder = folderController.text;
-                    print(nameOfFolder);
-                  });
-                },
-              );
-            },
-          ),
-          actions: <Widget>[
-            FlatButton(
-              color: Colors.blue,
-              child: Text(
-                'Add',
-                style: TextStyle(color: Colors.white),
-              ),
-              onPressed: () async {
-                if (nameOfFolder != null) {
-                  await callFolderCreationMethod(nameOfFolder);
-                  getDir();
-                  setState(() {
-                    folderController.clear();
-                    nameOfFolder = null;
-                  });
-                  Navigator.of(context).pop();
-                }
-              },
-            ),
-            FlatButton(
-              color: Colors.redAccent,
-              child: Text(
-                'No',
-                style: TextStyle(color: Colors.white),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+
 
   List<FileSystemEntity> _folders;
+
   Future<void> getDir() async {
-     final directory = await getApplicationDocumentsDirectory();
-    final dir = directory.path;
-    String pdfDirectory = '${widget.filespath}';
+    String pdfDirectory = '${widget.filesPath}';
     final myDir = new Directory(pdfDirectory);
-    print("DIRECTOR ${myDir}");
-
-    // final myDir = new Directory(fileStr);
-
-    var _folders_list = myDir.listSync(recursive: true, followLinks: false);
-
-
     setState(() {
       _folders = myDir.listSync(recursive: true, followLinks: false);
     });
-     print("_folders");
     print(_folders);
   }
 
@@ -149,10 +73,10 @@ class InnerFolderState extends State<InnerFolder>{
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            'Are you sure to delete this folder?',
+            'Are you sure to delete this?',
           ),
           actions: <Widget>[
-            FlatButton(
+            ElevatedButton(
               child: Text('Yes'),
               onPressed: () async {
                 await _folders[index].delete();
@@ -160,8 +84,12 @@ class InnerFolderState extends State<InnerFolder>{
                 Navigator.of(context).pop();
               },
             ),
-            FlatButton(
-              child: Text('No'),
+            ElevatedButton(
+              style:ElevatedButton.styleFrom(
+                primary: Colors.redAccent, // background
+                onPrimary: Colors.redAccent, // foreground
+              ),
+              child: Text('No',style: TextStyle(color: Colors.white),),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -171,27 +99,16 @@ class InnerFolderState extends State<InnerFolder>{
       },
     );
   }
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String path = await ExtStorage.getExternalStoragePublicDirectory(
-        ExtStorage.DIRECTORY_DOWNLOADS);
-    print("Internal Directory ${path}");
 
-  }
   @override
   void initState() {
-
-    _folders=[];
-    print("NAME ${widget.filespath}");
+    _folders = [];
     getDir();
-    initPlatformState();
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
@@ -199,22 +116,23 @@ class InnerFolderState extends State<InnerFolder>{
         backgroundColor: Colors.blueAccent.shade700,
         onPressed: () {
           setState(() {
-
-          picFileFromStorage();
+            picFileFromStorage();
           });
         },
       ),
       appBar: AppBar(
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.add),
-        //     onPressed: () {
-        //       _showMyDialog();
-        //     },
-        //   ),
-        // ],
-      ),
-      body: GridView.builder(
+          // actions: [
+          //   IconButton(
+          //     icon: Icon(Icons.add),
+          //     onPressed: () {
+          //       _showMyDialog();
+          //     },
+          //   ),
+          // ],
+          ),
+      body:
+      _folders.length!=0 ?
+      GridView.builder(
         padding: EdgeInsets.symmetric(
           horizontal: 20,
           vertical: 25,
@@ -229,43 +147,40 @@ class InnerFolderState extends State<InnerFolder>{
             elevation: 6.0,
             child: Stack(
               children: [
+
                 Container(
                   width: double.infinity,
                   padding: EdgeInsets.all(10),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-
                       FutureBuilder(
                           future: getFileType(_folders[index]),
-                          builder: (ctx,snapshot){
-
-                            if(snapshot.hasData)
-                            {
-                              FileStat f=snapshot.data;
-                              print("file.stat() ${f.type}");
-                              ;
-                              if(f.type.toString().contains("file"))
-                              {
-                                return  Icon(
+                          builder: (ctx, snapshot) {
+                            if (snapshot.hasData) {
+                              FileStat f = snapshot.data;
+                              if (f.type.toString().contains("file")) {
+                                return Icon(
                                   Icons.file_copy_outlined,
                                   size: 60,
                                   color: Colors.orange,
                                 );
-                              }else
-                              {
-                                return  InkWell(
-                                  onTap: (){
-                                    final myDir = new Directory(_folders[index].path);
+                              } else {
+                                return InkWell(
+                                  onTap: () {
+                                    final myDir =
+                                        new Directory(_folders[index].path);
 
-                                    var    _folders_list = myDir.listSync(recursive: true, followLinks: false);
+                                    var _foldersList = myDir.listSync(
+                                        recursive: true, followLinks: false);
 
-                                    for(int k=0;k<_folders_list.length;k++)
-                                    {
-                                      var config = File(_folders_list[k].path);
+                                    for (int k = 0;
+                                        k < _foldersList.length;
+                                        k++) {
+                                      var config = File(_foldersList[k].path);
                                       print("IsFile ${config is File}");
                                     }
-                                    print(_folders_list);
+                                    print(_foldersList);
                                   },
                                   child: Icon(
                                     Icons.folder,
@@ -323,69 +238,72 @@ class InnerFolderState extends State<InnerFolder>{
           );
         },
         itemCount: _folders.length,
+      )
+      :Center(
+        child: Text(
+          'Nothing Added Yet', style: TextStyle(color: Colors.black),
+        ),
       ),
     );
   }
+
   Widget _dialog(BuildContext context, String path) {
     TextEditingController _textNameFieldController = TextEditingController();
     TextEditingController _textPassFieldController = TextEditingController();
     return AlertDialog(
-
       insetPadding: EdgeInsets.all(0),
       title: const Text("Verify, its You"),
-     content: Column(
-       mainAxisSize: MainAxisSize.min,
-       children: [
-         Padding(
-           padding: const EdgeInsets.all(2.0),
-           child: TextField(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: TextField(
               onChanged: (value) {
-            setState(() {
-            });
-    },
-    controller: _textNameFieldController,
-             decoration: const InputDecoration(
-               border: OutlineInputBorder(),
-               labelText: 'Username',
-                 labelStyle: TextStyle(fontSize: 14)
-             ),
-    ),
-         ),
-         Padding(
-           padding: const EdgeInsets.all(2.0),
-           child: TextField(
-             onChanged: (value) {
-               setState(() {
-               });
-             },
-             obscureText: true,
-             controller: _textPassFieldController,
-             decoration: const InputDecoration(
-               border: OutlineInputBorder(),
-               labelText: 'Password',
-               labelStyle: TextStyle(fontSize: 14)
-             ),
-           ),
-         ),
-       ],
-     ),
+                setState(() {});
+              },
+              controller: _textNameFieldController,
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Username',
+                  labelStyle: TextStyle(fontSize: 14)),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: TextField(
+              onChanged: (value) {
+                setState(() {});
+              },
+              obscureText: true,
+              controller: _textPassFieldController,
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Password',
+                  labelStyle: TextStyle(fontSize: 14)),
+            ),
+          ),
+        ],
+      ),
       actions: <Widget>[
         TextButton(
             onPressed: () {
-
-             verifySharedPref(_textNameFieldController.text,_textPassFieldController.text).then((value) =>
-             {
-               if(value)
-                 {
-                 _downloadfile(path),
-                  Navigator.of(context).pop(),
-                 }
-              else{
-              ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-              content: Text('Please provide correct credentials..'),)),}
-             }
-             );
+              verifySharedPref(_textNameFieldController.text,
+                      _textPassFieldController.text)
+                  .then((value) => {
+                        if (value)
+                          {
+                            _downloadFile(path),
+                            Navigator.of(context).pop(),
+                          }
+                        else
+                          {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content:
+                                  Text('Please provide correct credentials..'),
+                            )),
+                          }
+                      });
             },
             child: const Text("Okay"))
       ],
@@ -402,39 +320,32 @@ class InnerFolderState extends State<InnerFolder>{
         var curve = Curves.easeInOut.transform(a1.value);
         return Transform.scale(
           scale: curve,
-          child: _dialog(ctx,path),
+          child: _dialog(ctx, path),
         );
       },
       transitionDuration: const Duration(milliseconds: 300),
     );
   }
 
-
-
-
-
   //Logics
 
-
   Future getFileType(file) {
-
     return file.stat();
   }
+
   Future _getStoragePermission() async {
     if (await Permission.storage.request().isGranted) {
       setState(() {
         permissionGranted = true;
       });
-    }
-    else if (await Permission.storage.request().isPermanentlyDenied) {
+    } else if (await Permission.storage.request().isPermanentlyDenied) {
       await openAppSettings();
-
-
     }
   }
+
   Future<void> picFileFromStorage() async {
     _getStoragePermission();
-    if(permissionGranted) {
+    if (permissionGranted) {
       FilePickerResult result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['jpg', 'pdf', 'doc'],
@@ -443,66 +354,63 @@ class InnerFolderState extends State<InnerFolder>{
       if (result != null) {
         PlatformFile file = result.files.first;
         final File fileForFirebase = File(file.path);
-        moveFile(fileForFirebase, widget.filespath + "/${file.name}").then((
-            value) =>
-            getDir(),
+        moveFile(fileForFirebase, widget.filesPath + "/${file.name}").then(
+          (value) => getDir(),
         );
       } else {
         // User canceled the picker
       }
     }
   }
+
   Future<File> moveFile(File sourceFile, String newPath) async {
     try {
       // prefer using rename as it is probably faster
 
       return await sourceFile.rename(newPath);
     } on FileSystemException catch (e) {
+      print(e);
       // if rename fails, copy the source file and then delete it
       final newFile = await sourceFile.copy(newPath);
-      print("NEW FILE ${newFile }");
       getDir();
-      setState(() {
-
-      });
+      setState(() {});
       await sourceFile.delete();
 
       return newFile;
     }
   }
-  Future<void> _downloadfile(String path) async {
+
+  Future<void> _downloadFile(String path) async {
     String internalPath = await ExtStorage.getExternalStoragePublicDirectory(
         ExtStorage.DIRECTORY_DOWNLOADS);
-    print("fileName ${path.split('/').last}");
-    print("Internal Directory ${internalPath}");
     final File fileForFirebase = File(path);
-    extractToDownload(fileForFirebase,internalPath+"/${path.split('/').last}").then((value) => {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('File Downloaded.. ${internalPath}'),))
-
-    });
-
+    extractToDownload(
+            fileForFirebase, internalPath + "/${path.split('/').last}")
+        .then((value) => {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('File Downloaded.. $internalPath'),
+              ))
+            });
   }
+
   Future<File> extractToDownload(File sourceFile, String newPath) async {
     try {
       // prefer using rename as it is probably faster
       return await sourceFile.rename(newPath);
     } on FileSystemException catch (e) {
+      print(e);
       // if rename fails, copy the source file and then delete it
       final newFile = await sourceFile.copy(newPath);
       return newFile;
     }
   }
-  Future<bool> verifySharedPref(String username, String passwrod) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    if(username==preferences.getString(Global.NAME) && passwrod ==preferences.getString(Global.PASS) ){
-      return true;
 
+  Future<bool> verifySharedPref(String username, String password) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    if (username == preferences.getString(Global.NAME) &&
+        password == preferences.getString(Global.PASS)) {
+      return true;
     }
     return false;
-
   }
-
 }
-

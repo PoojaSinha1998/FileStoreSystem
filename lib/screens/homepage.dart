@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-
-import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'detailfolder.dart';
@@ -18,7 +16,7 @@ class _HomePageState extends State<HomePage> {
     final Directory _appDocDir = await getApplicationDocumentsDirectory();
     //App Document Directory + folder name
     final Directory _appDocDirFolder =
-    Directory('${_appDocDir.path}/$folderName/');
+        Directory('${_appDocDir.path}/$folderName/');
 
     if (await _appDocDirFolder.exists()) {
       //if folder already exists return path
@@ -26,7 +24,7 @@ class _HomePageState extends State<HomePage> {
     } else {
       //if folder not exists create folder and then return its path
       final Directory _appDocDirNewFolder =
-      await _appDocDirFolder.create(recursive: true);
+          await _appDocDirFolder.create(recursive: true);
       return _appDocDirNewFolder.path;
     }
   }
@@ -40,6 +38,7 @@ class _HomePageState extends State<HomePage> {
 
   final folderController = TextEditingController();
   String nameOfFolder;
+
   Future<void> _showMyDialog() async {
     return showDialog<void>(
       context: context,
@@ -76,8 +75,11 @@ class _HomePageState extends State<HomePage> {
             },
           ),
           actions: <Widget>[
-            FlatButton(
-              color: Colors.blue,
+            ElevatedButton(
+              style:ElevatedButton.styleFrom(
+                primary: Colors.blue, // background
+                onPrimary: Colors.blue, // foreground
+              ),
               child: Text(
                 'Add',
                 style: TextStyle(color: Colors.white),
@@ -94,8 +96,11 @@ class _HomePageState extends State<HomePage> {
                 }
               },
             ),
-            FlatButton(
-              color: Colors.redAccent,
+            ElevatedButton(
+              style:ElevatedButton.styleFrom(
+                primary: Colors.redAccent, // background
+                onPrimary: Colors.redAccent, // foreground
+              ),
               child: Text(
                 'No',
                 style: TextStyle(color: Colors.white),
@@ -111,6 +116,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<FileSystemEntity> _folders;
+
   Future<void> getDir() async {
     final directory = await getApplicationDocumentsDirectory();
     final dir = directory.path;
@@ -130,10 +136,10 @@ class _HomePageState extends State<HomePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            'Are you sure to delete this folder?',
+            'Are you sure to delete this?',
           ),
           actions: <Widget>[
-            FlatButton(
+            ElevatedButton(
               child: Text('Yes'),
               onPressed: () async {
                 await _folders[index].delete();
@@ -141,8 +147,12 @@ class _HomePageState extends State<HomePage> {
                 Navigator.of(context).pop();
               },
             ),
-            FlatButton(
-              child: Text('No'),
+            ElevatedButton(
+              style:ElevatedButton.styleFrom(
+                primary: Colors.redAccent, // background
+                onPrimary: Colors.redAccent, // foreground
+              ),
+              child: Text('No',style: TextStyle(color: Colors.white),),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -156,7 +166,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     // TODO: implement initState
-    _folders=[];
+    _folders = [];
     getDir();
     super.initState();
   }
@@ -196,29 +206,26 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-
                       FutureBuilder(
                           future: getFileType(_folders[index]),
-                          builder: (ctx,snapshot){
-
-                            if(snapshot.hasData)
-                            {
-                              FileStat f=snapshot.data;
+                          builder: (ctx, snapshot) {
+                            if (snapshot.hasData) {
+                              FileStat f = snapshot.data;
                               print("file.stat() ${f.type}");
-                              ;
-                              if(f.type.toString().contains("file"))
-                              {
-                                return  Icon(
+                              if (f.type.toString().contains("file")) {
+                                return Icon(
                                   Icons.file_copy_outlined,
                                   size: 70,
                                   color: Colors.orange,
                                 );
-                              }else
-                              {
-                                return  InkWell(
-                                  onTap: (){
-                                    Navigator.push(context, new MaterialPageRoute(builder: (builder){
-                                      return InnerFolder(filespath:_folders[index].path);
+                              } else {
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.push(context,
+                                        new MaterialPageRoute(
+                                            builder: (builder) {
+                                      return InnerFolder(
+                                          filesPath: _folders[index].path);
                                     }));
                                     /* final myDir = new Directory(_folders[index].path);
 
@@ -245,7 +252,6 @@ class _HomePageState extends State<HomePage> {
                               color: Colors.orange,
                             );
                           }),
-
                       Text(
                         '${_folders[index].path.split('/').last}',
                       ),
@@ -274,10 +280,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future getFileType(file)
-  {
-
+  Future getFileType(file) {
     return file.stat();
   }
-
 }

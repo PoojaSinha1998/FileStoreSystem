@@ -22,8 +22,9 @@ class _LoginPageState extends State<LoginPage> {
           child: Center(
             child: ListView(
               children: <Widget>[
-
-                SizedBox(height: 50,),
+                SizedBox(
+                  height: 50,
+                ),
                 Container(
                     alignment: Alignment.center,
                     padding: const EdgeInsets.all(10),
@@ -32,7 +33,6 @@ class _LoginPageState extends State<LoginPage> {
                       style: TextStyle(fontSize: 20),
                     )),
                 Column(
-
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -57,8 +57,9 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20,),
-
+                    SizedBox(
+                      height: 20,
+                    ),
                     Container(
                         height: 50,
                         width: MediaQuery.of(context).size.width,
@@ -69,10 +70,10 @@ class _LoginPageState extends State<LoginPage> {
                             print(nameController.text);
                             print(passwordController.text);
 
-                            addUserPass(nameController.text,passwordController.text);
+                            addUserPass(
+                                nameController.text, passwordController.text);
                           },
-                        )
-                    ),
+                        )),
                     Row(
                       children: <Widget>[
                         const Text('Does not have account?'),
@@ -90,7 +91,6 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ],
                 ),
-
               ],
             ),
           )),
@@ -100,10 +100,9 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> addUserPass(String username, String password) async {
     SharedPreferences preferences;
     preferences = await SharedPreferences.getInstance();
-    preferences.setString(Global.NAME,username);
+    preferences.setString(Global.NAME, username);
     preferences.setString(Global.PASS, password);
 
     Navigator.of(context).pushReplacementNamed('homepage');
-
   }
 }
