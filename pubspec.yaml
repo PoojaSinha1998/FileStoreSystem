@@ -33,6 +33,8 @@ dependencies:
   ext_storage:
   intl: any
   shared_preferences:
+  aes_crypt: ^0.1.1
+  permission_handler:
 dev_dependencies:
   flutter_test:
     sdk: flutter

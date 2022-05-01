@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_folder/utils/global.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class InnerFolder extends StatefulWidget{
 
@@ -20,6 +21,7 @@ class InnerFolder extends StatefulWidget{
 class InnerFolderState extends State<InnerFolder>{
 
   String get fileStr =>widget.filespath;
+  bool permissionGranted = false;
   Future<String> createFolderInAppDocDir(String folderName) async {
     //Get this App Document Directory
 
@@ -418,21 +420,35 @@ class InnerFolderState extends State<InnerFolder>{
 
     return file.stat();
   }
+  Future _getStoragePermission() async {
+    if (await Permission.storage.request().isGranted) {
+      setState(() {
+        permissionGranted = true;
+      });
+    }
+    else if (await Permission.storage.request().isPermanentlyDenied) {
+      await openAppSettings();
+
+    }
+  }
   Future<void> picFileFromStorage() async {
-
-    FilePickerResult result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['jpg', 'pdf', 'doc'],
-    );
-
-    if (result != null) {
-      PlatformFile file = result.files.first;
-      final File fileForFirebase = File(file.path);
-      moveFile(fileForFirebase,widget.filespath+"/${file.name}").then((value) =>
-      getDir(),
+    _getStoragePermission();
+    if(permissionGranted) {
+      FilePickerResult result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'pdf', 'doc'],
       );
-    } else {
-      // User canceled the picker
+
+      if (result != null) {
+        PlatformFile file = result.files.first;
+        final File fileForFirebase = File(file.path);
+        moveFile(fileForFirebase, widget.filespath + "/${file.name}").then((
+            value) =>
+            getDir(),
+        );
+      } else {
+        // User canceled the picker
+      }
     }
   }
   Future<File> moveFile(File sourceFile, String newPath) async {
